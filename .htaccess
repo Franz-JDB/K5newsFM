@@ -1,0 +1,38 @@
+RewriteEngine On
+
+# Handle API routes
+RewriteRule ^api/articles/?$ api/articles.php [L,QSA]
+RewriteRule ^api/articles/([0-9]+)/?$ api/articles.php [L,QSA]
+RewriteRule ^api/categories/?$ api/categories.php [L,QSA]
+RewriteRule ^api/categories/([0-9]+)/?$ api/categories.php [L,QSA]
+RewriteRule ^api/authors/?$ api/authors.php [L,QSA]
+RewriteRule ^api/authors/([0-9]+)/?$ api/authors.php [L,QSA]
+RewriteRule ^api/comments/?$ api/comments.php [L,QSA]
+RewriteRule ^api/comments/([0-9]+)/?$ api/comments.php [L,QSA]
+RewriteRule ^api/search/?$ api/search.php [L,QSA]
+RewriteRule ^api/subscribers/?$ api/subscribers.php [L,QSA]
+
+# Handle article URLs (for frontend)
+RewriteRule ^article/([a-zA-Z0-9-]+)/?$ index.php?article=$1 [L,QSA]
+RewriteRule ^category/([a-zA-Z0-9-]+)/?$ index.php?category=$1 [L,QSA]
+RewriteRule ^author/([a-zA-Z0-9-]+)/?$ index.php?author=$1 [L,QSA]
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Cache control for static assets (simplified version)
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+
+# Prevent access to sensitive files
+<FilesMatch "\.(env|log|sql|md|txt)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes 
